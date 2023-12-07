@@ -46,3 +46,4 @@ app.*.map.json
 
 key.properties
 lib/firebase_options.dart
+.metadata
