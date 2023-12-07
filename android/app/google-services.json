@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "348780789517",
+    "project_id": "car-journal",
+    "storage_bucket": "car-journal.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:348780789517:android:ea2d68ba84327e4c7a3a44",
+        "android_client_info": {
+          "package_name": "raw.vladoo.car_journal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDluu9Rjm7tmf4DnrqcswJszycuycGtnsg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
