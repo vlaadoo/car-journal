@@ -1,6 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:car_journal/constants/routes.dart';
+import 'package:car_journal/services/auth/auth_exceptions.dart';
+import 'package:car_journal/services/auth/auth_service.dart';
+import 'package:car_journal/utilities/show_error_dialog.dart';
 import 'package:flutter/material.dart';
 
+// TODO cleanup (https://youtu.be/VPvVD8t02U8?t=58455)
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
 
@@ -53,25 +57,52 @@ class _LoginViewState extends State<LoginView> {
             final email = _email.text;
             final password = _password.text;
             try {
-              final userCred = await FirebaseAuth.instance
-                  .signInWithEmailAndPassword(email: email, password: password);
-              print(userCred);
-            } on FirebaseAuthException catch (e) {
-              if (e.code == 'user-not-found') {
-                print("Invalid");
+              await AuthService.firebase().logIn(
+                email: email,
+                password: password,
+              );
+              final user = AuthService.firebase().currentUser;
+              if (user?.isEmailVerified ?? false) {
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  journalRoute,
+                  (route) => false,
+                );
               } else {
-                print(e);
+                // Navigator.of(context).pushNamedAndRemoveUntil(verify, (route) => false)
               }
+            } on UserNotFoundAuthException {
+              if (!context.mounted) return;
+
+              await showErrorDialog(
+                context,
+                'Пользователь не найден',
+              );
+            } on WrongPasswordAuthException {
+              if (!context.mounted) return;
+
+              await showErrorDialog(
+                context,
+                'Неверная почта или пароль.',
+              );
+            } on GenericAuthException {
+              if (!context.mounted) return;
+
+              await showErrorDialog(
+                context,
+                'Ошибка входа',
+              );
             }
           },
-          child: const Text("Войти в аккаунт"),
+          child: const Text("Войти"),
         ),
         TextButton(
             onPressed: () {
-              Navigator.of(context)
-                  .pushNamedAndRemoveUntil('/register/', (route) => false);
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                registerRoute,
+                (route) => false,
+              );
             },
-            child: const Text("Зарегистрироваться"))
+            child: const Text("Нет аккаунта?"))
       ]),
     );
   }

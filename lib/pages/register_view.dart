@@ -1,5 +1,11 @@
+import 'package:car_journal/constants/routes.dart';
+import 'package:car_journal/firebase_options.dart';
+import 'package:car_journal/utilities/show_error_dialog.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+// TODO cleanup (https://youtu.be/VPvVD8t02U8?t=58740)
 
 class RegisterView extends StatefulWidget {
   const RegisterView({Key? key}) : super(key: key);
@@ -50,22 +56,36 @@ class _RegisterViewState extends State<RegisterView> {
           ),
           TextButton(
             onPressed: () async {
+              await Firebase.initializeApp(
+                options: DefaultFirebaseOptions.currentPlatform,
+              );
               final email = _email.text;
               final password = _password.text;
-
-              final userCred = await FirebaseAuth.instance
-                  .createUserWithEmailAndPassword(
-                      email: email, password: password);
-              print(userCred);
+              try {
+                await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                    email: email, password: password);
+                if (!context.mounted) return;
+                // TODO отправка подтверждения до перехода на страницу (https://youtu.be/VPvVD8t02U8?t=52285)
+                Navigator.of(context).pushNamed(emailVerifyRoute);
+              } on FirebaseAuthException catch (e) {
+                if (e.code == 'weak-password') {
+                  if (!context.mounted) return;
+                  showErrorDialog(context, "Слабый пароль");
+                } else if (e.code == 'email-already-in-use') {
+                  if (!context.mounted) return;
+                  showErrorDialog(context, "Данная почта уже используется");
+                }
+                //TODO сделать другие ошибки
+              }
             },
             child: const Text("Создать аккаунт"),
           ),
           TextButton(
               onPressed: () {
                 Navigator.of(context)
-                    .pushNamedAndRemoveUntil('/login/', (route) => false);
+                    .pushNamedAndRemoveUntil(loginRoute, (route) => false);
               },
-              child: const Text("Войти"))
+              child: const Text("Уже есть аккаунт?"))
         ]));
   }
 }
