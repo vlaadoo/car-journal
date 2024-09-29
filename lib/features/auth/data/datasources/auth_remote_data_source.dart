@@ -1,7 +1,6 @@
 import 'package:car_journal/core/error/exceptions.dart';
 import 'package:car_journal/features/auth/data/models/user_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'dart:developer' as devtools;
 
 abstract interface class AuthRemoteDataSource {
   Session? get currentUserSession;
@@ -18,6 +17,8 @@ abstract interface class AuthRemoteDataSource {
   });
 
   Future<UserModel?> getCurrentUserData();
+
+  Future<void> logOut();
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -60,7 +61,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           'name': name,
         },
       );
-      devtools.log("sended");
       if (response.user == null) {
         throw ServerException('User is null');
       }
@@ -82,6 +82,15 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
             .copyWith(email: currentUserSession!.user.email);
       }
       return null;
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<void> logOut() async {
+    try {
+      await _supabaseClient.auth.signOut();
     } catch (e) {
       throw ServerException(e.toString());
     }

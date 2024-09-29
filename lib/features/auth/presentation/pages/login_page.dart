@@ -45,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               child: BlocConsumer<AuthBloc, AuthState>(
                 listener: (context, state) {
-                  if (state is AuthFailure) {
+                  if (state is AuthFailure && state.message.isNotEmpty) {
                     devtools.log("Failure");
                     showToast(
                       context: context,
@@ -116,6 +116,7 @@ class _LoginPageState extends State<LoginPage> {
                                             ),
                                       }
                                   };
+                            devtools.log(state.toString());
                           },
                         ),
                         SizedBox(height: 16.0),

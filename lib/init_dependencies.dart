@@ -4,6 +4,7 @@ import 'package:car_journal/features/auth/data/datasources/auth_remote_data_sour
 import 'package:car_journal/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:car_journal/features/auth/domain/repository/auth_repository.dart';
 import 'package:car_journal/features/auth/domain/usecases/current_user.dart';
+import 'package:car_journal/features/auth/domain/usecases/logout.dart';
 import 'package:car_journal/features/auth/domain/usecases/user_login.dart';
 import 'package:car_journal/features/auth/domain/usecases/user_sign_up.dart';
 import 'package:car_journal/features/auth/presentation/bloc/auth_bloc.dart';
@@ -46,6 +47,9 @@ void _initAuth() {
     ..registerFactory(
       () => CurrentUser(serviceLocator()),
     )
+    ..registerFactory(
+      () => Logout(serviceLocator()),
+    )
     // Bloc
     ..registerLazySingleton(
       () => AuthBloc(
@@ -53,6 +57,7 @@ void _initAuth() {
         userLogin: serviceLocator(),
         currentUser: serviceLocator(),
         appUserCubit: serviceLocator(),
+        logout: serviceLocator(),
       ),
     );
 }
