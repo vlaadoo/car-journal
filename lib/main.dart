@@ -1,9 +1,9 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:car_journal/core/common/cubits/app_user/app_user_cubit.dart';
-import 'package:car_journal/features/auth/carjournal/homepage.dart';
 import 'package:car_journal/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:car_journal/features/auth/presentation/pages/login_page.dart';
+import 'package:car_journal/features/carjournal/presentation/pages/main_page.dart';
 import 'package:car_journal/init_dependencies.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -58,7 +58,7 @@ class _MyAppState extends State<MyApp> {
         },
         builder: (context, isLoggedIn) {
           if (isLoggedIn) {
-            return HomePage();
+            return MainPage();
           }
           return LoginPage();
         },

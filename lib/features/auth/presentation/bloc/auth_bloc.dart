@@ -64,10 +64,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       ),
     );
     res.fold(
+      // (failure) {
+      //   devtools.log(failure.message);
+      //   emit(AuthFailure(failure.message));
+      // },
       (failure) => emit(AuthFailure(failure.message)),
       (user) => _emitAuthSuccess(user, emit),
     );
-    devtools.log(_appUserCubit.state.toString());
   }
 
   void _userLogOut(AuthLogout event, Emitter<AuthState> emit) async {

@@ -49,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
                     devtools.log("Failure");
                     showToast(
                       context: context,
-                      message: state.message,
+                      message: "Что-то пошло не так, попробуйте позже",
                     );
                   }
                 },

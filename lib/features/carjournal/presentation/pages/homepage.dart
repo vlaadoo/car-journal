@@ -3,6 +3,7 @@
 import 'package:car_journal/core/common/widgets/loader.dart';
 import 'package:car_journal/core/utils/show_alert.dart';
 import 'package:car_journal/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:car_journal/features/auth/presentation/pages/login_page.dart';
 import 'package:car_journal/init_dependencies.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,6 +39,11 @@ class _HomePageState extends State<HomePage> {
                     showToast(
                       context: context,
                       message: "Logout failed: ${state.message}",
+                    );
+                  } else if (state is AuthInitial) {
+                    Navigator.pushReplacement(
+                      context,
+                      LoginPage.route(),
                     );
                   }
                 },
